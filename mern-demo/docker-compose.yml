@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  # Câu 81: Service backend
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    # Câu 83: Ánh xạ port 5000
+    ports:
+      - "5000:5000"
+    # Câu 85: Biến môi trường kết nối MongoDB Atlas
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://tranminh0957_db_user:Nhieu123456@cluster0.hqulsdk.mongodb.net/cloud_lab?retryWrites=true&w=majority&appName=Cluster0
+
+  # Câu 82: Service frontend
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    # Câu 84: Ánh xạ port 3000
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

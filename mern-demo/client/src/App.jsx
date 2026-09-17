@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 function App() {
   const [students, setStudents] = useState([]);
-  const [studentId, setStudentId] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [studentId, setStudentId] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const API_URL = "http://localhost:5000/api/students";
 
   const fetchStudents = async () => {
     try {
-      const res = await fetch('/api/students');
+      const res = await fetch(API_URL);
       const data = await res.json();
       setStudents(data);
     } catch (err) {
-      console.error('Lỗi tải danh sách:', err);
+      console.error("Lỗi tải danh sách:", err);
     }
   };
 
@@ -23,65 +25,75 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/students', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId, name, email })
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId, name, email }),
       });
       if (res.ok) {
-        setStudentId('');
-        setName('');
-        setEmail('');
+        setStudentId("");
+        setName("");
+        setEmail("");
         fetchStudents();
       }
     } catch (err) {
-      console.error('Lỗi thêm sinh viên:', err);
+      console.error("Lỗi thêm sinh viên:", err);
     }
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f3f4f6',
-      padding: '40px 20px',
-      fontFamily: 'Segoe UI, Roboto, Helvetica, Arial, sans-serif'
-    }}>
-      <div style={{
-        maxWidth: '900px',
-        margin: '0 auto',
-        backgroundColor: '#ffffff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
-        padding: '32px'
-      }}>
-        <h1 style={{
-          fontSize: '24px',
-          fontWeight: '700',
-          color: '#1f2937',
-          marginBottom: '28px',
-          textAlign: 'center'
-        }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f3f4f6",
+        padding: "40px 20px",
+        fontFamily: "Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "900px",
+          margin: "0 auto",
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          boxShadow:
+            "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)",
+          padding: "32px",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "24px",
+            fontWeight: "700",
+            color: "#1f2937",
+            marginBottom: "28px",
+            textAlign: "center",
+          }}
+        >
           Quản Lý Sinh Viên
         </h1>
 
-        <form onSubmit={handleSubmit} style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr)) auto',
-          gap: '12px',
-          marginBottom: '32px',
-          alignItems: 'center'
-        }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr)) auto",
+            gap: "12px",
+            marginBottom: "32px",
+            alignItems: "center",
+          }}
+        >
           <input
             placeholder="Mã số sinh viên"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
             required
             style={{
-              padding: '10px 14px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              outline: 'none',
-              fontSize: '14px'
+              padding: "10px 14px",
+              border: "1px solid #d1d5db",
+              borderRadius: "8px",
+              outline: "none",
+              fontSize: "14px",
             }}
           />
           <input
@@ -90,11 +102,11 @@ function App() {
             onChange={(e) => setName(e.target.value)}
             required
             style={{
-              padding: '10px 14px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              outline: 'none',
-              fontSize: '14px'
+              padding: "10px 14px",
+              border: "1px solid #d1d5db",
+              borderRadius: "8px",
+              outline: "none",
+              fontSize: "14px",
             }}
           />
           <input
@@ -104,47 +116,57 @@ function App() {
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{
-              padding: '10px 14px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              outline: 'none',
-              fontSize: '14px'
+              padding: "10px 14px",
+              border: "1px solid #d1d5db",
+              borderRadius: "8px",
+              outline: "none",
+              fontSize: "14px",
             }}
           />
           <button
             type="submit"
             style={{
-              backgroundColor: '#2563eb',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '10px 20px',
-              fontWeight: '600',
-              fontSize: '14px',
-              cursor: 'pointer'
+              backgroundColor: "#2563eb",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              fontWeight: "600",
+              fontSize: "14px",
+              cursor: "pointer",
             }}
           >
             Thêm mới
           </button>
         </form>
 
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{
-            width: '100%',
-            borderCollapse: 'collapse',
-            textAlign: 'left',
-            fontSize: '14px'
-          }}>
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              textAlign: "left",
+              fontSize: "14px",
+            }}
+          >
             <thead>
-              <tr style={{
-                backgroundColor: '#f9fafb',
-                color: '#4b5563',
-                borderBottom: '2px solid #e5e7eb'
-              }}>
-                <th style={{ padding: '12px 16px', fontWeight: '600' }}>STT</th>
-                <th style={{ padding: '12px 16px', fontWeight: '600' }}>MSSV</th>
-                <th style={{ padding: '12px 16px', fontWeight: '600' }}>Họ và tên</th>
-                <th style={{ padding: '12px 16px', fontWeight: '600' }}>Email</th>
+              <tr
+                style={{
+                  backgroundColor: "#f9fafb",
+                  color: "#4b5563",
+                  borderBottom: "2px solid #e5e7eb",
+                }}
+              >
+                <th style={{ padding: "12px 16px", fontWeight: "600" }}>STT</th>
+                <th style={{ padding: "12px 16px", fontWeight: "600" }}>
+                  MSSV
+                </th>
+                <th style={{ padding: "12px 16px", fontWeight: "600" }}>
+                  Họ và tên
+                </th>
+                <th style={{ padding: "12px 16px", fontWeight: "600" }}>
+                  Email
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -153,19 +175,40 @@ function App() {
                   <tr
                     key={st._id}
                     style={{
-                      borderBottom: '1px solid #e5e7eb',
-                      backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9fafb'
+                      borderBottom: "1px solid #e5e7eb",
+                      backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
                     }}
                   >
-                    <td style={{ padding: '12px 16px', color: '#6b7280' }}>{index + 1}</td>
-                    <td style={{ padding: '12px 16px', fontWeight: '600', color: '#111827' }}>{st.studentId}</td>
-                    <td style={{ padding: '12px 16px', color: '#374151' }}>{st.name}</td>
-                    <td style={{ padding: '12px 16px', color: '#2563eb' }}>{st.email}</td>
+                    <td style={{ padding: "12px 16px", color: "#6b7280" }}>
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        fontWeight: "600",
+                        color: "#111827",
+                      }}
+                    >
+                      {st.studentId}
+                    </td>
+                    <td style={{ padding: "12px 16px", color: "#374151" }}>
+                      {st.name}
+                    </td>
+                    <td style={{ padding: "12px 16px", color: "#2563eb" }}>
+                      {st.email}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ padding: '24px 16px', textAlign: 'center', color: '#9ca3af' }}>
+                  <td
+                    colSpan="4"
+                    style={{
+                      padding: "24px 16px",
+                      textAlign: "center",
+                      color: "#9ca3af",
+                    }}
+                  >
                     Chưa có dữ liệu sinh viên
                   </td>
                 </tr>
