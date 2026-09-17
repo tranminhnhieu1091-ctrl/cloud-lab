@@ -5,6 +5,7 @@ function App() {
   const [studentId, setStudentId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const API_URL = "http://localhost:5000/api/students";
 
@@ -25,19 +26,62 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, name, email }),
-      });
-      if (res.ok) {
-        setStudentId("");
-        setName("");
-        setEmail("");
-        fetchStudents();
+      if (editingId) {
+        // Cập nhật (PUT)
+        const res = await fetch(`${API_URL}/${editingId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId, name, email }),
+        });
+        if (res.ok) {
+          cancelEdit();
+          fetchStudents();
+        }
+      } else {
+        // Thêm mới (POST)
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId, name, email }),
+        });
+        if (res.ok) {
+          setStudentId("");
+          setName("");
+          setEmail("");
+          fetchStudents();
+        }
       }
     } catch (err) {
-      console.error("Lỗi thêm sinh viên:", err);
+      console.error("Lỗi xử lý:", err);
+    }
+  };
+
+  const handleEdit = (st) => {
+    setEditingId(st._id);
+    setStudentId(st.studentId);
+    setName(st.name);
+    setEmail(st.email);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setStudentId("");
+    setName("");
+    setEmail("");
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
+      try {
+        const res = await fetch(`${API_URL}/${id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          fetchStudents();
+        }
+      } catch (err) {
+        console.error("Lỗi xóa sinh viên:", err);
+      }
     }
   };
 
@@ -52,7 +96,7 @@ function App() {
     >
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "960px",
           margin: "0 auto",
           backgroundColor: "#ffffff",
           borderRadius: "12px",
@@ -77,7 +121,8 @@ function App() {
           onSubmit={handleSubmit}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr)) auto",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(180px, 1fr)) auto auto",
             gap: "12px",
             marginBottom: "32px",
             alignItems: "center",
@@ -126,7 +171,7 @@ function App() {
           <button
             type="submit"
             style={{
-              backgroundColor: "#2563eb",
+              backgroundColor: editingId ? "#10b981" : "#2563eb",
               color: "#ffffff",
               border: "none",
               borderRadius: "8px",
@@ -136,8 +181,26 @@ function App() {
               cursor: "pointer",
             }}
           >
-            Thêm mới
+            {editingId ? "Cập nhật" : "Thêm mới"}
           </button>
+          {editingId && (
+            <button
+              type="button"
+              onClick={cancelEdit}
+              style={{
+                backgroundColor: "#6b7280",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "8px",
+                padding: "10px 16px",
+                fontWeight: "600",
+                fontSize: "14px",
+                cursor: "pointer",
+              }}
+            >
+              Hủy
+            </button>
+          )}
         </form>
 
         <div style={{ overflowX: "auto" }}>
@@ -166,6 +229,15 @@ function App() {
                 </th>
                 <th style={{ padding: "12px 16px", fontWeight: "600" }}>
                   Email
+                </th>
+                <th
+                  style={{
+                    padding: "12px 16px",
+                    fontWeight: "600",
+                    textAlign: "center",
+                  }}
+                >
+                  Hành động
                 </th>
               </tr>
             </thead>
@@ -197,12 +269,45 @@ function App() {
                     <td style={{ padding: "12px 16px", color: "#2563eb" }}>
                       {st.email}
                     </td>
+                    <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                      <button
+                        onClick={() => handleEdit(st)}
+                        style={{
+                          backgroundColor: "#f59e0b",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "6px",
+                          padding: "6px 12px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          marginRight: "8px",
+                        }}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        onClick={() => handleDelete(st._id)}
+                        style={{
+                          backgroundColor: "#ef4444",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "6px",
+                          padding: "6px 12px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Xóa
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="5"
                     style={{
                       padding: "24px 16px",
                       textAlign: "center",
