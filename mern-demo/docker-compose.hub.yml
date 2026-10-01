@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  backend:
+    image: nhieu236983/mern-backend:1.0
+    container_name: mern-backend-hub
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://tranminh0957_db_user:Nhieu123456@cluster0.hqulsdk.mongodb.net/cloud_lab?retryWrites=true&w=majority&appName=Cluster0
+    networks:
+      - mern-hub-network
+
+  frontend:
+    image: nhieu236983/mern-frontend:2.0
+    container_name: mern-frontend-hub
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - mern-hub-network
+
+networks:
+  mern-hub-network:
+    driver: bridge

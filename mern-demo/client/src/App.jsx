@@ -114,7 +114,7 @@ function App() {
             textAlign: "center",
           }}
         >
-          Quản Lý Sinh Viên
+          Quản Lý Sinh Viên Phiên bản 2.0
         </h1>
 
         <form
