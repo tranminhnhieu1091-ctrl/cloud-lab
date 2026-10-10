@@ -7,7 +7,7 @@ function App() {
   const [email, setEmail] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  const API_URL = "https://mern-backend-nhieu.onrender.com/api/students";
+  const API_URL = "https://mern-backend-236983.onrender.com/api/students";
 
   const fetchStudents = async () => {
     try {
